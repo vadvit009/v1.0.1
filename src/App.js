@@ -1,41 +1,44 @@
 import './App.css';
 import React from 'react';
-import Header from './header/header';
+// import Header from './header/header';
 import Footer from './footer/footer';
 import GoodsListing from './components/store/goodsListing/goodsListing';
 import GoodsListingUser from './components/store/goodsListingUser/goodsListingUser';
 import Chat from './components/store/chat/chat';
 import Login from './components/auth/login/login';
 import Home from './components/store/home/home';
+import Sell from './components/store/sell/sell';
 import Register from './components/auth/register/register';
 import RestorePassword from './components/auth/restorePass/restorePassword';
 import Profile from './components/auth/profile/profile';
 import notFound from './components/store/notFound/notFound';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { Provider, observer } from 'mobx-react';
-import users from './data/index';
-
+import { observer } from 'mobx-react';
+import UserContext from './userContext';
+import store from './data/index';
+import Dialogs from './components/store/dialogs/dialogs';
 
 const App = () => {
 
     return (
-        <Provider store={users.users}>
+        <UserContext.Provider value={store}>
             <Router>
-                <Header />
                 <Switch>
                     <Route exact path='/' component={Home} />
-                    <Route path='/login' component={Login} />
+                    <Route path='/login' component={Login}/>
                     <Route path='/register' component={Register} />
                     <Route path='/restore-password' component={RestorePassword} />
                     <Route path='/profile' component={Profile} />
-                    <Route path='/goods-listing' component={GoodsListing} />
+                    <Route path='/favorite-goods-listing' component={GoodsListing} />
                     <Route path='/goods-listing-user' component={GoodsListingUser} />
-                    <Route path='/chat' component={Chat} />
+                    <Route path='/product-detail' component={Chat} />
+                    <Route path='/sell' component={Sell}/>
+                    <Route path='/inbox' component={Dialogs}/>
                     <Route component={notFound} />
                 </Switch>
                 <Footer />
             </Router>
-        </Provider>
+        </UserContext.Provider>
     )
 };
 const ObserverApp = observer(App);

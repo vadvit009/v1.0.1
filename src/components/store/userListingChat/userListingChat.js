@@ -1,37 +1,57 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import tonyStark from '../../../tonyStark.png';
+import { set } from 'mobx';
+import context from '../../../userContext';
+import { Redirect } from 'react-router-dom';
 
-const UserListingChat = () => {
+const UserListingChat = (...card) => {
+
+    const cardDetails = card[0];
+    const cardStore = useContext(context).cards.all;
+    const addToFav = (e) => {
+        set(cardStore[cardDetails.id - 1], { favorite: true });
+        e.target.style.backgroundColor = 'pink'
+        console.log('work');
+    }
+
+    const isEmpty = (cardDetails) => {
+        for (const key in cardDetails) {
+            if (cardDetails.hasOwnProperty(key)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    if (isEmpty(cardDetails) === true) {
+        return <Redirect to='/' />
+    }
+
     return (
-        <div className='container col-md-8 mx-auto'>
+        <div className='container shadow-lg p-3 col-12 my-3 col-md-8 mx-auto'>
             < div className='row' >
-                <div className='col-md-9'>
-                    <div className="card">
-                        <img src="..." className="card-img-top" alt="img" />
+                <div className='col-8'>
+                    <div className="card border-0">
+                        <img src={tonyStark} className="card-img-top" alt="img" style={{ height: '150px' }} />
                         <div className="card-body">
-                            <h5 className="card-title">Item name <span className='text-muted'>Today, 18:24</span></h5>
-                            <p className='text-muted'>365 Kuphal Glens Suite 589</p>
-                            <p className="card-text">Some quick example text to
-                            build on the card title and make up the bulk of
-                            the card's content.
-                            Some quick example text to
-                            build on the card title and make up the bulk of
-                            the card's content.
-                            Some quick example text to
-                            build on the card title and make up the bulk of
-                            the card's content.</p>
+                            <div className='row'>
+                                <h5 className="card-title col-6">{cardDetails.name} <span className='text-muted'>{cardDetails.createdAt}</span></h5>
+                                <h5 className="card-title col-6 text-right">{cardDetails.price + '$'}</h5>
+                            </div>
+                            <p className='text-muted'>{cardDetails.adress}</p>
+                            <p className="card-text">{cardDetails.desc}</p>
                         </div>
                     </div>
                 </div>
-                <div className='col-md-3'>
+                <div className='col-4'>
                     <div className='row'>
-                        <div className='container text-center'>
-                            <img src={tonyStark} alt='user' style={{width:'100px', borderRadius: '100px'}}/>
+                        <div className=' text-center'>
+                            <img src={tonyStark} alt='user' style={{ width: '50%', borderRadius: '100px' }} />
                             <p className='title font-weight-bold mb-0'>Tony Stark</p>
                             <p className='text-muted my-0'>Jakarta, Indonesia</p>
                             <button className="btn btn-info my-1" data-toggle="modal" data-target="#exampleModal">
                                 CHAT WITH SELLER</button>
-                            <button className="btn px-3 btn-outline-info my-1">ADD TO FAVORITE</button>
+                            <button className="btn px-3 btn-outline-info my-1" onClick={addToFav}>ADD TO FAVORITE</button>
                         </div>
                     </div>
                 </div>
